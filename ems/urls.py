@@ -24,6 +24,8 @@ urlpatterns += [
 
     path('venues/', include('venues.urls')), 
 
+    path('events/', include('events.urls')), 
+
 ]
 
 if not DEBUG:

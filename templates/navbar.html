@@ -1,0 +1,20 @@
+<!-- Navigation -->
+<nav class="navbar">
+    <div class="navbar_container">
+        <a href="#" class="logo">Event<span>MS</span></a>
+        <ul class="nav-links">
+            <li><a href="">Home</a></li>
+            <li><a href="#">Events</a></li>
+            <li><a href="#">Categories</a></li>
+            <li><a href="{% url 'venues' %}">Venue</a></li>
+            <li><a href="#">Contact</a></li>
+            {% if request.user.is_authenticated %}
+            <li><a href="{% url 'logout' %}"  style="color: #f8f9fa;" class="btn btn-outline">Logout</a></li>
+            {% else %}
+            <li><a href="{% url 'login_user' %}"  style="color: #f8f9fa;" class="btn btn-outline">Login</a></li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>
+
+

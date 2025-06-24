@@ -9,9 +9,11 @@ from .views import *
 #Translated
 urlpatterns = (
 
-	# path('login/', login, name='login'), 
+	path('venues/', venues, name='venues'), 
+	path('add-venue/', create_venue, name='create_venue'), 
+	# path('add-venue/', create_venue, name='create_venue'), 
 
 	
-	# path('user_profile/<user_id>/', user_profile, name='user_profile'),
+	path('edit_venue/<venue_id>/', edit_venue, name='edit_venue'),
 
 )

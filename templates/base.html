@@ -1,0 +1,20 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}EventHub{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+    
+    {% block extra_styles %}{% endblock %}
+</head>
+<body>
+    {% include "navbar.html" %}
+    
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+    {% include "footer.html" %}
+</body>
+</html>

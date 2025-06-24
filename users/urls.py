@@ -9,13 +9,13 @@ from .views import *
 #Translated
 urlpatterns = (
 
-	# path('index/', index, name='login'), 
+	path('login_user/', login_user, name='login_user'), 
 
-	# path('logout/', logout, name='logout'), 
+	path('logout/', logout, name='logout'), 
 
-	# path('register_user/', register_user, name='register_user'), 
+	path('register_user/', register_user, name='register_user'), 
 
-	# path('home/', home, name='home'), 
+	path('home/', home, name='home'), 
 
 	# path('users/', users, name='users'), 
 

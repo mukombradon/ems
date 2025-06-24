@@ -1,0 +1,19 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protected page</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/styles.css' %}">
+</head>
+<body>
+
+    {% block content %}
+    <h1>Welcome, {{ request.user.name }}!</h1>
+    <p>Your email: {{ request.user.email }}</p>
+    <p>Your role: {{ request.user.role.name|default:"No role assigned" }}</p>
+    <a href="{% url 'authapp:logout' %}">Logout</a>
+    {% endblock %}
+</body>
+</html>

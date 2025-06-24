@@ -39,6 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'venues',
+    'users',
+    'events',
 ]
 
 MIDDLEWARE = [
@@ -125,6 +128,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+
 #Custom 
 
 MEDIA_URL = '/media/'
@@ -141,7 +145,7 @@ else:
     STATIC_ROOT = os.path.join(os.path.dirname(__file__), "../templates/assets")
 
 
-CSRF_TRUSTED_ORIGINS = ['https://ecowaste.com', 'http://ecowaste.com']
+CSRF_TRUSTED_ORIGINS = ['https://event.com', 'http://event.com']
 
 
 
