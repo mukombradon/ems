@@ -3,9 +3,9 @@
     <div class="navbar_container">
         <a href="#" class="logo">Event<span>MS</span></a>
         <ul class="nav-links">
-            <li><a href="">Home</a></li>
-            <li><a href="#">Events</a></li>
-            <li><a href="#">Categories</a></li>
+            <li><a href="{% url 'index' %}">Home</a></li>
+            <li><a href="{% url 'events' %}">Events</a></li>
+            <li><a href="{% url 'categories' %}">Categories</a></li>
             <li><a href="{% url 'venues' %}">Venue</a></li>
             <li><a href="#">Contact</a></li>
             {% if request.user.is_authenticated %}

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Event List{% endblock %}
+
+{% block extra_styles %}
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'styles/venue_list.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+       <h1>Discover Amazing Events Near You</h1>
+        <p>Find and attend events that match your interests, from concerts to conferences and everything in between.</p>
+    </div>
+</section>
+
+<!-- Event Section -->
+<section class="events">
+    <div class="event_container">
+        <a href="{% url 'create-event' %}">Add event</a>
+        {% for event in events %}
+        <div class="event-card">
+            <div>
+                {% with event.images.all as images %}
+                    {% if images %}
+                        {% for image in images %}
+                            <img src="{{ image.image.url }}" alt="Image of {{ event.name }}" class="venue-image">
+                        {% endfor %}
+                    {% else %}
+                        <p><em>No image available for {{ event.name }}</em></p>
+                    {% endif %}
+                {% endwith %}
+
+            </div>
+            <div>
+                <h3 class="event-title">{{ event.name }}</h3>
+                <p class="event-description">{{ event.description|default:"No description." }}</p>
+                <div class="event-location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>{{ event.city }}, {{ event.region }}, {{ event.country }}</span>
+                </div>
+                <!-- <a href="{% url 'edit_venue' venue.id %}">Edit</a> -->
+            </div>
+        </div>
+        {% empty %}
+        <p>No events available.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

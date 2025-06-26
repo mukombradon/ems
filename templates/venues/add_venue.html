@@ -6,7 +6,7 @@
 {% block extra_styles %}
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'styles/add_venue.css' %}">
+    <link rel="stylesheet" href="{% static 'css/add_venue.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -30,7 +30,7 @@
                 <p>Fill in the details about your venue to get started</p>
             </div>
 
-            <form method="post" action="{% url 'create_venue' %}" enctype="multipart/form-data" id="venue-form">
+            <form method="post" action="{% url 'add-venue' %}" enctype="multipart/form-data" id="venue-form">
                 {% csrf_token %}
 
                 <!-- Venue Details Section -->
@@ -40,42 +40,43 @@
 
                 <div class="form-group">
                     <label for="{{ venue_form.name.id_for_label }}">Venue Name *</label>
-                    <input type="text" name="name">
+                    <input type="text" name="name" class="form-control" placeholder="Enter venue name" required>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
                         <label for="{{ venue_form.address.id_for_label }}">Address *</label>
-                        <input type="text" name="address">                    
+                        <input type="text" name="address" class="form-control" placeholder="Enter venue address" required>                    
                     </div>
                     <div class="form-group">
                         <label for="{{ venue_form.capacity.id_for_label }}">Capacity *</label>
-                        <input type="Number" name="capacity">
+                        <input type="Number" name="capacity" class="form-control" placeholder="Enter venue capacity" required>
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
                         <label for="{{ venue_form.city.id_for_label }}">City *</label>
-                        <input type="text" name="city">
+                        <input type="text" name="city" class="form-control" placeholder="Enter city" required>
                     </div>
                     <div class="form-group">
                         <label for="{{ venue_form.region.id_for_label }}">Region/State</label>
-                        <input type="text" name="region">
+                        <input type="text" name="region"    class="form-control" placeholder="Enter region/state">
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
                         <label for="{{ venue_form.country.id_for_label }}">Country *</label>
-                        <input type="text" name="country">                    </div>
+                        <input type="text" name="country" class="form-control" placeholder="Enter country" required>              
+                    </div>
                     <!-- <div class="form-group">
                         <label for="{{ venue_form.rating.id_for_label }}">Rating (0–5)</label>
                         {{ venue_form.rating }}
                     </div> -->
                     <div class="form-group">
                         <label for="{{ venue_form.phone_number.id_for_label }}">Phone Number</label>
-                        <input type="Number" name="phone_number">
+                        <input type="Number" name="phone_number" class="form-control" placeholder="Enter phone number">
                     </div>
                 </div>
 
@@ -83,7 +84,7 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="{{ venue_form.contact_email.id_for_label }}">Contact Email</label>
-                        <input type="Email" name="contact_email">
+                        <input type="Email" name="contact_email"    class="form-control" placeholder="Enter contact email">
                     </div>
                     
                 </div>
@@ -91,7 +92,7 @@
                 <!-- Description -->
                 <div class="form-group">
                     <label for="{{ venue_form.description.id_for_label }}">Description</label>
-                    <input type="text" name="description">
+                    <input type="text" name="description"   class="form-control" placeholder="Enter a brief description of the venue">
                 </div>
 
                 <!-- Image Upload -->
@@ -99,12 +100,12 @@
                     <h3>Upload Images</h3>
                     <div class="image-upload" onclick="document.getElementById('venue-images').click()">
                         <i class="fas fa-cloud-upload-alt"></i>
-                        <p>Click to upload images or drag and drop</p>
+                        <p>Click to upload images</p>
                         <p class="small">Recommended size: 1200x800px</p>
                     </div>
 
-                        <input type="file" name="image">
-
+                    <input type="file" id="venue-images" name="images" style="display: none;" multiple accept="image/*" required>
+        
                     <div class="image-preview" id="image-preview">
                         <!-- Preview images will appear here -->
                     </div>
@@ -112,7 +113,7 @@
 
                 <!-- Submit Button -->
                 <div class="form-group" style="text-align: center; margin-top: 40px;">
-                    <button type="submit" class="btn" style="padding: 12px 40px; font-size: 16px; border: 5px solid #4361ee;">Create Venue</button>
+                    <button type="submit" class="btn" style="padding: 12px 40px; font-size: 16px;">Create Venue</button>
                 </div>
             </form>
         </div>
@@ -121,38 +122,37 @@
 
 
 <script>
-    // Image preview functionality
     document.getElementById('venue-images').addEventListener('change', function(e) {
         const preview = document.getElementById('image-preview');
         preview.innerHTML = '';
         
-        const files = e.target.files;
-        for (let i = 0; i < files.length; i++) {
-            const file = files[i];
-            if (!file.type.match('image.*')) continue;
-            
+        const files = Array.from(e.target.files);
+        files.forEach((file, index) => {
+            if (!file.type.match('image.*')) return;
+
             const reader = new FileReader();
             reader.onload = function(e) {
                 const previewItem = document.createElement('div');
                 previewItem.className = 'image-preview-item';
-                
+
                 const img = document.createElement('img');
                 img.src = e.target.result;
-                
+                img.alt = `Image ${index + 1}`;
+
                 const removeBtn = document.createElement('div');
                 removeBtn.className = 'remove-image';
                 removeBtn.innerHTML = '&times;';
                 removeBtn.onclick = function() {
                     previewItem.remove();
-                    // TODO: Also remove from file input
+                    // Note: can't remove file from FileList directly
                 };
-                
+
                 previewItem.appendChild(img);
                 previewItem.appendChild(removeBtn);
                 preview.appendChild(previewItem);
             }
             reader.readAsDataURL(file);
-        }
+        });
     });
 </script>
 

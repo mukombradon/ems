@@ -10,10 +10,11 @@ from .views import *
 urlpatterns = (
 
 	path('venues/', venues, name='venues'), 
-	path('add-venue/', create_venue, name='create_venue'), 
+	path('add-venue/', create_venue, name='add-venue'), 
 	# path('add-venue/', create_venue, name='create_venue'), 
 
 	
 	path('edit_venue/<venue_id>/', edit_venue, name='edit_venue'),
+	path('venue_details/<venue_id>/', venue_details, name='venue_details'),
 
 )

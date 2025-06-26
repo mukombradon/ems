@@ -1,150 +1,30 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - EcoWaste Management System</title>
+  <title>Login - Events Management System</title>
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
   <!-- Custom CSS -->
+  <link rel="stylesheet" href="{% static 'css/login.css' %}">
   <style>
-    :root {
-      --primary-color: #2a9d8f;
-      --secondary-color: #264653;
-      --light-color: #e9f5f3;
-      --border-color: #e2e8f0;
-    }
-    
-    body {
-      background-color: #f5f9f8;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .login-container {
-      max-width: 400px;
-      width: 100%;
-      padding: 20px;
-    }
-    
-    .card {
-      border: none;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-      border-radius: 12px;
-    }
-    
-    .card-header {
-      background-color: white;
-      border-bottom: 1px solid var(--border-color);
-      padding: 20px;
-      text-align: center;
-      border-radius: 12px 12px 0 0 !important;
-    }
-    
-    .logo-wrapper {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 64px;
-      height: 64px;
-      background-color: var(--light-color);
-      border-radius: 50%;
-      margin-bottom: 16px;
-    }
-    
-    .logo-icon {
-      color: var(--primary-color);
-      font-size: 32px;
-    }
-    
-    .card-title {
-      color: var(--secondary-color);
-      font-weight: 600;
-      margin-bottom: 0;
-    }
-    
-    .card-body {
-      padding: 24px;
-    }
-    
-    .form-control {
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid var(--border-color);
-    }
-    
-    .form-control:focus {
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 0.25rem rgba(42, 157, 143, 0.25);
-    }
-    
-    .form-label {
-      color: var(--secondary-color);
-      font-weight: 500;
-    }
-    
-    .btn-primary {
-      background-color: var(--primary-color);
-      border-color: var(--primary-color);
-      padding: 12px;
-      border-radius: 8px;
-      font-weight: 500;
-    }
-    
-    .btn-primary:hover, .btn-primary:focus {
-      background-color: #238b7e;
-      border-color: #238b7e;
-    }
-    
-    .form-check-input:checked {
-      background-color: var(--primary-color);
-      border-color: var(--primary-color);
-    }
-    
-    .forgot-password {
-      color: var(--primary-color);
-      text-decoration: none;
-    }
-    
-    .forgot-password:hover {
-      text-decoration: underline;
-    }
-    
-    .register-link {
-      color: var(--primary-color);
-      text-decoration: none;
-    }
-    
-    .register-link:hover {
-      text-decoration: underline;
-    }
-    
-    .input-group-text {
-      background-color: white;
-      border-left: none;
-      cursor: pointer;
-    }
-    
-    .password-toggle {
-      border-left: none;
-    }
+   
   </style>
 </head>
 <body>
   <div class="login-container">
     <div class="card">
       <div class="card-header">
-        <div class="logo-wrapper">
+        <!-- <div class="logo-wrapper">
           <i class="bi bi-layers logo-icon"></i>
-        </div>
-        <h4 class="card-title">EcoWaste Management</h4>
+        </div> --><br>
+        <h4 class="card-title">Event<span>MS</span></h4>
         <p class="text-muted mt-2">Sign in to your account</p>
-        <p class="text-muted mt-2" style="color:red !important;">{{error_msg}}</p>
+        <p class="text-muted mt-2" style="color:rgb(255, 0, 0) !important; background-color: rgb(250, 134, 134); border-radius: 5px;">{{error_msg}}</p>
       </div>
       <div class="card-body">
          <form method="post" action="{% url 'login_user' %}">
@@ -208,4 +88,4 @@
     });
   </script>
 </body>
-</html>a
+</html>

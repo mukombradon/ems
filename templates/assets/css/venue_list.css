@@ -1,3 +1,4 @@
+/* General Styles */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap');
 :root {
     --primary: #4361ee;
@@ -23,114 +24,180 @@ body {
     background-color: #f5f7fa;
 }
 
-.list_container {
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+}
+
+.container {
+    width: 90%;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 15px;
 }
 
 /* Hero Section */
 .hero {
-    padding: 60px 0 40px;
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../img/hero_bckgrnd.webp');
+    color: white;
+    padding: 60px 0;
     text-align: center;
+    margin-bottom: 40px;
+    height: 300px;
 }
 
 .hero h1 {
-    font-family: 'Poppins', sans-serif;
-    font-size: 36px;
+    font-size: 2.5rem;
     margin-bottom: 15px;
-    color: var(--dark);
 }
 
 .hero p {
-    font-size: 18px;
-    color: var(--gray);
+    font-size: 1.1rem;
     max-width: 700px;
-    margin: 0 auto 40px;
+    margin: 0 auto 25px;
+}
+
+.hero a {
+    display: inline-block;
+    background-color: white;
+    color: #4a6bff;
+    padding: 12px 25px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.hero a:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    color: white;
 }
 
 /* Venues Section */
-.events {
-    padding: 40px 0 80px;
-}
-.list_container.events {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 30px;
+.venues {
+    padding: 20px 0 60px;
 }
 
-.event-card {
-    background-color: white;
+.venue_container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.venue-card {
+    background: white;
     border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-    padding: 20px;
-    margin-bottom: 30px;
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-    width: 30%;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.venue-image {
-    width: 200px;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 8px;
+.venue-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
 }
 
-.event-title {
-    font-family: 'Poppins', sans-serif;
-    font-size: 22px;
-    margin-bottom: 15px;
-    color: var(--dark);
-}
-
-.event-description {
-    color: var(--gray);
-    margin-bottom: 20px;
-    line-height: 1.7;
-    text-align: justify;
-}
-
-.event-location {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--gray);
-    font-size: 14px;
-}
-
-.event-location i {
-    color: var(--primary);
-}
-
-/* Responsive Styles */
-@media (max-width: 768px) {
-.navbar {
-    flex-direction: column;
-    gap: 20px;
-}
-
-.nav-links {
-    gap: 20px;
-}
-
-.hero h1 {
-    font-size: 28px;
-}
-
-.hero p {
-    font-size: 16px;
-}
-
-.event-card {
-    flex-direction: column;
-    gap: 20px;
+.venue-image-container {
+    height: 200px;
+    overflow: hidden;
 }
 
 .venue-image {
     width: 100%;
-    height: auto;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
 }
+
+.venue-card:hover .venue-image {
+    transform: scale(1.05);
+}
+
+.venue-details {
+    padding: 20px;
+}
+
+.venue-title {
+    font-size: 1.3rem;
+    margin: 0 0 10px;
+    color: #2c3e50;
+}
+
+.venue-description {
+    color: #7f8c8d;
+    font-size: 0.95rem;
+    margin-bottom: 15px;
+}
+
+.venue-location {
+    display: flex;
+    align-items: center;
+    color: #4a6bff;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+}
+
+.venue-capacity {
+    display: flex;
+    align-items: center;
+    color: #4a6bff;
+    font-size: 0.9rem;
+    /* margin-bottom: 15px; */
+}
+.venue-capacity i {
+    margin-right: 8px;
+    
+}
+
+.venue-location i {
+    margin-right: 8px;
+}
+
+.venue-card a {
+    display: inline-block;
+    color: #4a6bff;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+.more-details{
+    display: flex;
+    justify-content: end;
+}
+.more-details a {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: var(--primary);
+    border-radius: 25px;
+    text-decoration: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    color: white;
+}
+
+.venue-card a:hover {
+    color: #2c3e50;
+    text-decoration: underline;
+}
+
+/* Empty State */
+.venues p {
+    text-align: left;
+    color: #7f8c8d;
+    /* font-style: italic; */
+    grid-column: 1 / -1;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .venue_container {
+        grid-template-columns: 1fr;
+    }
+    
+    .hero h1 {
+        font-size: 2rem;
+    }
 }

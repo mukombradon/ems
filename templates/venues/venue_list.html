@@ -5,7 +5,8 @@
 
 {% block extra_styles %}
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'styles/venue_list.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/venue_list.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -15,35 +16,42 @@
     <div class="container">
         <h1>Venues</h1>
         <p>Check out these amazing venues available for you. Don't miss out on the fun!</p>
+        <a href="{% url 'add-venue' %}" class="btn">Add Venue</a>
+        
     </div>
 </section>
 
 <!-- Venues Section -->
-<section class="events">
-    <div class="list_container">
-        <a href="{% url 'create_venue' %}">Add Venue</a>
+<section class="venues container">
+    <div class="venue_container">
         {% for venue in venues %}
-        <div class="event-card">
-            <div>
-                {% with venue.images.all as images %}
-                    {% if images %}
-                        {% for image in images %}
-                            <img src="{{ image.image.url }}" alt="Image of {{ venue.name }}" class="venue-image">
-                        {% endfor %}
+        <div class="venue-card">
+            <div class="venue-image-container">
+                {% with venue.images.all|first as image %}
+                    {% if image %}
+                        <img src="{{ image.image.url }}" alt="Image of {{ venue.name }}" class="venue-image">
                     {% else %}
-                        <p><em>No image available for {{ venue.name }}</em></p>
+                    <div class="no-image-placeholder">
+                        <i class="fas fa-image"></i>
+                        <a href="{% url 'edit_venue' venue.id %}">Edit</a>
+                    </div>
                     {% endif %}
                 {% endwith %}
-
             </div>
-            <div>
-                <h3 class="event-title">{{ venue.name }}</h3>
-                <p class="event-description">{{ venue.description|default:"No description." }}</p>
-                <div class="event-location">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>{{ venue.city }}, {{ venue.region }}, {{ venue.country }}</span>
+            <div class="venue-details">
+                <h3 class="venue-title">{{ venue.name }}</h3>
+                <p class="venue-description">{{ venue.description|default:"No description available."|truncatechars:100 }}</p>
+                <div class="venue-location">
+                    <i class="fas fa-map-marker-alt" style="color: black;"></i>
+                    <span>{{ venue.city }}{% if venue.region %}, {{ venue.region }}{% endif %}, {{ venue.country }}</span>
                 </div>
-                <a href="{% url 'edit_venue' venue.id %}">Edit</a>
+                <div class="venue-capacity">
+                    <i class="fas fa-users" style="color: black;"></i>
+                    <span>Capacity: {{ venue.capacity }}</span>
+                </div>
+                <div class="more-details">
+                    <a href="{% url 'venue_details' venue.id %}"> Details</a>
+                </div>
             </div>
         </div>
         {% empty %}

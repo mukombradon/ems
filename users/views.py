@@ -22,8 +22,9 @@ def index(request):
 	return render(request, 'index.html', { })
 
 
-def home(request):
-	return render(request, 'home.html', {})
+@login_required
+def events_view(request):
+	return render(request, 'events/event_list.html', {})
 
 
 def login_user(request):
@@ -38,7 +39,7 @@ def login_user(request):
 
 		if user is not None:
 			login(request, user)
-			return HttpResponseRedirect('/users/home/')
+			return HttpResponseRedirect('/events/event_list/')
 		else:
 			error_msg = "invalid Username or Password"
 			return render(request, 'users/login.html', {'user': user, 'error_msg':error_msg})
@@ -46,9 +47,6 @@ def login_user(request):
 		return render(request, 'users/login.html', {'user':user})
 
 
-@login_required
-def home(request):
-	return render(request, 'index.html', {})
 
 
 @login_required
@@ -112,30 +110,9 @@ def register_user(request):
 
 		login(request, new_user)
 
-		return HttpResponseRedirect("/home/")
+		return HttpResponseRedirect("/events/event_list/")
 
 	else:
 		return render(request, 'users/register_user.html', {})
 	
 
-
-# @login_required
-# def home_view(request):
-#     user_id = request.user.id
-#     user_email = request.user.email
-#     user_name = request.user.name
-
-#     context = {
-#         'user_id': user_id,
-#         'user_email': user_email,
-#         'user_name': user_name,
-#         'current_user': request.user,
-#     }
-#     return render(request, 'auth1_app/home.html')
-
-# @login_required
-# def protected_view(request):
-#     return render(request, 'registration/protected.html')
-    
-# def venue_view(request):
-#     return render(request, 'venue/venue_list.html')

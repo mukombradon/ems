@@ -15,7 +15,8 @@ urlpatterns = (
 
 	path('register_user/', register_user, name='register_user'), 
 
-	path('home/', home, name='home'), 
+	path('events/', events_view, name='events'), 
+
 
 	# path('users/', users, name='users'), 
 

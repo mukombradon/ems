@@ -29,7 +29,7 @@ def create_venue(request):
 		contact_email= request.POST["contact_email"]
 		phone_number= request.POST["phone_number"]
 		description = request.POST["description"]
-		get_images= request.FILES.getlist("image")
+		get_images= request.FILES.getlist("images")
 
 
 		new_venue= Venue()
@@ -92,4 +92,4 @@ def delete_venue(request, venue_id):
 def venue_details(request, venue_id):
 	user = request.user
 	get_venue = Venue.objects.get(id = venue_id)
-	return render(request, 'venue_details.html', {'get_venue':get_venue}) 
+	return render(request, 'venues/venue_details.html', {'get_venue':get_venue}) 

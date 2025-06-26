@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}EventMS - Create Event{% endblock %}
+
+{% block extra_styles %}
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/add_venue.css' %}">
+{% endblock %}
+
+{% block content %}
+
+    <!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <h1>Create a New Event</h1>
+            <p>Add your event to our platform to connect with attendees and grow your audience.</p>
+        </div>
+    </div>
+</section>
+<br><br>
+<!-- Form Section -->
+<section class="form-section">
+    <div class="container">
+        <div class="form-container">
+            <div class="form-title">
+                <h2>Event Information</h2>
+                <p>Fill in the details about your event to get started</p>
+            </div>
+
+            <form method="post" action="{% url 'create-event' %}" enctype="multipart/form-data" id="event-form">
+                {% csrf_token %}
+
+                <!-- Basic Information Section -->
+                <div class="form-group">
+                    <h3>Basic Information</h3>
+                </div>
+
+                <div class="form-group">
+                    <label for="title">Event Title *</label>
+                    <input type="text" name="title" class="form-control" placeholder="Enter event title" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="short_description">Short Description *</label>
+                        <input type="text" name="short_description" class="form-control" placeholder="Brief description (max 110 chars)" maxlength="110" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Category *</label>
+                        <select name="category" class="form-control" required>
+                            {% for value, display in CATEGORY_CHOICES %}
+                                <option value="{{ value }}">{{ display }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="long_description">Full Description</label>
+                    <textarea name="long_description" class="form-control" placeholder="Detailed description of your event" rows="4"></textarea>
+                </div>
+
+                <!-- Date & Time Section -->
+                <div class="form-group">
+                    <h3>Date & Time</h3>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="event_date">Event Date *</label>
+                        <input type="date" name="event_date" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="event_time">Event Time *</label>
+                        <input type="time" name="event_time" class="form-control" required>
+                    </div>
+                </div>
+
+                <!-- Venue & Capacity -->
+                <div class="form-group">
+                    <h3>Venue & Capacity</h3>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="venue">Venue *</label>
+                        <input list="venue-options" name="venue_name" id="venue" class="form-control" required placeholder="Start typing venue name...">
+                        <datalist id="venue-options">
+                            {% for venue in venues %}
+                                <option value="{{ venue.name }}" data-id="{{ venue.id }}"></option>
+                            {% endfor %}
+                        </datalist>
+                        <input type="hidden" name="venue_id" id="venue_id">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="capacity">Capacity *</label>
+                        <input type="number" name="capacity" class="form-control" placeholder="Maximum attendees" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="location">Location Details *</label>
+                    <input type="text" name="location" class="form-control" placeholder="Specific location details (e.g., Room 101)" required>
+                </div>
+
+                <!-- Image Upload -->
+                <div class="form-group">
+                    <h3>Event Image Banner</h3>
+                    <div class="image-upload" onclick="document.getElementById('event-image').click()">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Click to upload event image</p>
+                        <p class="small">Recommended size: 1200x800px</p>
+                    </div>
+
+                    <input type="file" id="event-image" name="image" style="display: none;" accept="image/*">
+        
+                    <div class="image-preview" id="image-preview">
+                        <!-- Preview image will appear here -->
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="form-group" style="text-align: center; margin-top: 40px;">
+                    <button type="submit" class="btn" style="padding: 12px 40px; font-size: 16px; border: 5px solid #4361ee;">Create Event</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script>
+    // Image preview functionality
+    document.getElementById('event-image').addEventListener('change', function(e) {
+        const preview = document.getElementById('image-preview');
+        preview.innerHTML = '';
+        
+        if (this.files && this.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const previewItem = document.createElement('div');
+                previewItem.className = 'image-preview-item';
+
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.alt = 'Event Image Preview';
+
+                const removeBtn = document.createElement('div');
+                removeBtn.className = 'remove-image';
+                removeBtn.innerHTML = '&times;';
+                removeBtn.onclick = function() {
+                    previewItem.remove();
+                    document.getElementById('event-image').value = '';
+                };
+
+                previewItem.appendChild(img);
+                previewItem.appendChild(removeBtn);
+                preview.appendChild(previewItem);
+            }
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+</script>
+
+{% endblock %}
+
+{% block extra_scripts %}
+    <script>
+    const venueInput = document.getElementById('venue');
+    const venueIdInput = document.getElementById('venue_id');
+    const options = document.querySelectorAll('#venue-options option');
+
+    venueInput.addEventListener('input', () => {
+        const selectedName = venueInput.value;
+        const match = Array.from(options).find(opt => opt.value === selectedName);
+        venueIdInput.value = match ? match.dataset.id : '';
+    });
+</script>
+
+{% endblock %}

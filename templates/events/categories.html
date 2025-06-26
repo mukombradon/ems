@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Event Categories{% endblock %}
+
+{% block extra_styles %}
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/categories.css' %}">
+{% endblock %}
+
+{% block content %}
+
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+        <h1>Organize Event by Category</h1>
+        <p>Find venues that match your interests and passions.</p>
+    </div>
+</section>
+
+<!-- Categories Section -->
+<section class="categories">
+    <div class="container">
+        <div class="categories-grid">
+            {% for category in categories %}
+            <a href="#" class="category-card" data-category="{{ category.name }}">
+                <div class="category-icon">
+                    <i class="fas {{ category.icon }}"></i>
+                </div>
+                <h3>{{ category.display }}</h3>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% endblock %}

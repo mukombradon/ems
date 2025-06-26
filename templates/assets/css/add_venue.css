@@ -124,6 +124,15 @@ textarea.form-control {
     resize: vertical;
 }
 
+.btn{
+    border-color: none;
+
+}
+
+.btn:hover {
+    border-color:none;
+}
+
 .form-row {
     display: flex;
     gap: 20px;
