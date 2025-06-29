@@ -41,6 +41,7 @@ class Event(models.Model):
     actor = models.ForeignKey(User, on_delete=models.CASCADE, null = True)
     image = models.ImageField(upload_to='event_images/', null=True, blank=True)
 
+
     def __str__(self):
         return self.title
 
@@ -50,4 +51,4 @@ class EventImage(models.Model):
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Image for {self.event.name}"
+        return f"Image for {self.event.title}"

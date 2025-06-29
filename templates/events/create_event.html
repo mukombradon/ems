@@ -6,7 +6,7 @@
 {% block extra_styles %}
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'css/add_venue.css' %}">
+    <link rel="stylesheet" href="{% static 'css/create_event.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -29,6 +29,11 @@
                 <h2>Event Information</h2>
                 <p>Fill in the details about your event to get started</p>
             </div>
+            {% if form_error %}
+            <div class="alert alert-danger" style="color: red; padding: 10px; border: 1px solid red; margin-bottom: 20px;">
+            {{ form_error }}
+            </div>
+            {% endif %}
 
             <form method="post" action="{% url 'create-event' %}" enctype="multipart/form-data" id="event-form">
                 {% csrf_token %}
@@ -40,17 +45,17 @@
 
                 <div class="form-group">
                     <label for="title">Event Title *</label>
-                    <input type="text" name="title" class="form-control" placeholder="Enter event title" required>
+                    <input id="title" type="text" name="title" class="form-control" placeholder="Enter event title" required>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
                         <label for="short_description">Short Description *</label>
-                        <input type="text" name="short_description" class="form-control" placeholder="Brief description (max 110 chars)" maxlength="110" required>
+                        <input id="short_description" type="text" name="short_description" class="form-control" placeholder="Brief description (max 110 chars)" maxlength="110" required>
                     </div>
                     <div class="form-group">
                         <label for="category">Category *</label>
-                        <select name="category" class="form-control" required>
+                        <select id="category" name="category" class="form-control" required>
                             {% for value, display in CATEGORY_CHOICES %}
                                 <option value="{{ value }}">{{ display }}</option>
                             {% endfor %}
@@ -60,7 +65,7 @@
 
                 <div class="form-group">
                     <label for="long_description">Full Description</label>
-                    <textarea name="long_description" class="form-control" placeholder="Detailed description of your event" rows="4"></textarea>
+                    <textarea id="long_description" name="long_description" class="form-control" placeholder="Detailed description of your event" rows="4"></textarea>
                 </div>
 
                 <!-- Date & Time Section -->
@@ -71,11 +76,11 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="event_date">Event Date *</label>
-                        <input type="date" name="event_date" class="form-control" required>
+                        <input id="event_date" type="date" name="event_date" class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label for="event_time">Event Time *</label>
-                        <input type="time" name="event_time" class="form-control" required>
+                        <input id="event_time" type="time" name="event_time" class="form-control" required>
                     </div>
                 </div>
 
@@ -86,25 +91,32 @@
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="venue">Venue *</label>
-                        <input list="venue-options" name="venue_name" id="venue" class="form-control" required placeholder="Start typing venue name...">
-                        <datalist id="venue-options">
-                            {% for venue in venues %}
-                                <option value="{{ venue.name }}" data-id="{{ venue.id }}"></option>
-                            {% endfor %}
-                        </datalist>
-                        <input type="hidden" name="venue_id" id="venue_id">
+                        <label for="venue">Venue</label>
+                        <input list="venue-options" name="venue" id="venue" class="form-control" required placeholder="Start typing venue name...">
+                            <datalist id="venue-options">
+                                {% for venue in venues %}
+                                <option
+                                    data-id="{{ venue.id }}"
+                                    data-address="{{ venue.address }}"
+                                    data-city="{{ venue.city }}"
+                                    data-country="{{ venue.country }}"
+                                    value="{{ venue.name }}">
+                                </option>
+                                {% endfor %}
+                            </datalist>
                     </div>
+                    <input type="hidden" name="venue_id" id="venue_id">
+
 
                     <div class="form-group">
-                        <label for="capacity">Capacity *</label>
+                        <label id="capacity" for="capacity">Capacity *</label>
                         <input type="number" name="capacity" class="form-control" placeholder="Maximum attendees" required>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="location">Location Details *</label>
-                    <input type="text" name="location" class="form-control" placeholder="Specific location details (e.g., Room 101)" required>
+                    <input id="location" type="text" name="location" class="form-control"  required>
                 </div>
 
                 <!-- Image Upload -->
@@ -125,7 +137,7 @@
 
                 <!-- Submit Button -->
                 <div class="form-group" style="text-align: center; margin-top: 40px;">
-                    <button type="submit" class="btn" style="padding: 12px 40px; font-size: 16px; border: 5px solid #4361ee;">Create Event</button>
+                    <button type="submit" class="event-submit-btn" >Create Event</button>
                 </div>
             </form>
         </div>
@@ -163,21 +175,41 @@
             reader.readAsDataURL(this.files[0]);
         }
     });
-</script>
 
-{% endblock %}
-
-{% block extra_scripts %}
-    <script>
+    // Venue selection logic
     const venueInput = document.getElementById('venue');
     const venueIdInput = document.getElementById('venue_id');
+    const locationInput = document.getElementById('location');
     const options = document.querySelectorAll('#venue-options option');
 
-    venueInput.addEventListener('input', () => {
-        const selectedName = venueInput.value;
-        const match = Array.from(options).find(opt => opt.value === selectedName);
-        venueIdInput.value = match ? match.dataset.id : '';
+    venueInput.addEventListener('input', function () {
+        const inputValue = this.value;
+        let matched = false;
+
+        options.forEach(option => {
+            if (option.value === inputValue) {
+                // Set venue ID
+                venueIdInput.value = option.dataset.id;
+
+                // Format and set location string
+                const address = option.dataset.address || '';
+                const city = option.dataset.city || '';
+                const country = option.dataset.country || '';
+                const locationString = `${address}, ${city}, ${country}`.replace(/(,\s*)+$/, ''); // clean up trailing commas
+
+                locationInput.value = locationString;
+                matched = true;
+            }
+        });
+
+        if (!matched) {
+            venueIdInput.value = '';
+            locationInput.value = '';
+        }
     });
 </script>
+
+
+
 
 {% endblock %}

@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse, HttpResponseRedirect,HttpResponseForbidden
@@ -15,9 +15,8 @@ def events(request):
     return render(request, 'events/event_list.html', {'events': events})
 
 
-
 @transaction.atomic
-@login_required(login_url='/users/login/')
+@login_required(login_url='/users/login_user/')
 def create_event(request):
     user = request.user
     if request.POST:
@@ -26,12 +25,20 @@ def create_event(request):
         long_description = request.POST["long_description"]
         event_date = request.POST["event_date"]
         event_time = request.POST["event_time"]
-        venue_id = request.POST["venue_id"]
         capacity = request.POST["capacity"]
         location = request.POST["location"]
         category = request.POST["category"]
         get_images = request.FILES.getlist("image")
-
+        venue_id = request.POST.get("venue_id")
+        try:
+            venue = Venue.objects.get(id=venue_id)
+        except (Venue.DoesNotExist, ValueError, TypeError):
+            venues = Venue.objects.all()
+            return render(request, 'events/create_event.html', {
+                'CATEGORY_CHOICES': Event.CATEGORY_CHOICES,
+                'venues': venues,
+                'form_error': 'Invalid venue selected. Please choose from the list.'
+            })
 
         new_event = Event()
         new_event.actor = user
@@ -40,7 +47,7 @@ def create_event(request):
         new_event.long_description = long_description
         new_event.event_date = event_date
         new_event.event_time = event_time
-        new_event.venue_id = venue_id
+        new_event.venue = venue
         new_event.capacity = capacity
         new_event.location = location
         new_event.category = category
@@ -54,6 +61,7 @@ def create_event(request):
 
         return HttpResponseRedirect('/events/events/')
 
+
     else:
         venues = Venue.objects.all()  
         return render(request, 'events/create_event.html', {
@@ -64,7 +72,6 @@ def create_event(request):
 
 from django.shortcuts import render
 
-from django.shortcuts import render
 
 def categories(request):
     categories = [
@@ -88,3 +95,38 @@ def categories(request):
         {'name': 'Family & Kids', 'display': 'Family & Kids', 'icon': 'fa-child'}
     ]
     return render(request, 'events/categories.html', {'categories': categories})
+
+
+@transaction.atomic
+@login_required(login_url='/users/login_user/')
+def edit_event(request, event_id):
+    user = request.user
+    get_event = Event.objects.get(id=event_id)
+    if request.POST:
+        get_event.actor = user
+        get_event.title = request.POST["title"]
+        get_event.short_description = request.POST["short_description"]
+        get_event.long_description = request.POST["long_description"]
+        get_event.event_date = request.POST["event_date"]
+        get_event.event_time = request.POST["event_time"]
+        get_event.capacity = request.POST["capacity"]
+        get_event.location = request.POST["location"]
+        get_event.category = request.POST["category"]
+        get_event.get_images = request.FILES.getlist("image")
+        get_event.venue_id = request.POST.get("venue_id")
+        get_event.save()
+        return HttpResponseRedirect('/events/events/')
+
+    else:
+        return render(request, 'events/edit_event.html', {'get_event': get_event})
+
+@login_required(login_url='/users/login_user/')
+def event_details(request, event_id):
+    user = request.user
+    get_event = get_object_or_404(Event, id=event_id)
+    get_venue = get_event.venue if get_event.venue else None
+
+    return render(request, 'events/event_details.html', {
+        'get_event': get_event,
+        'get_venue': get_venue,
+    })

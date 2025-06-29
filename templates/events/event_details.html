@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Event - {{ get_event.title }} Details{% endblock %}
+
+{% block extra_styles %}
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/event_details.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="venue-details container">
+    <div class="venue-header">
+        <div class="venue-image-container">
+            {% if get_event.image %}
+                <img src="{{ get_event.image.url }}" alt="{{ get_event.title }}" class="main-image">
+            {% else %}
+                <div class="no-image-placeholder">
+                    <i class="fas fa-image"></i>
+                    <span>No Image Available</span>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="venue-highlights">
+            <h1>{{ get_event.title }}</h1>
+            <div class="info-section">
+                <h2><i class="fas fa-info-circle"></i> About</h2>
+                <p class="description">{{ get_event.short_description|default:"No description available." }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="venue-content">
+        <div>
+            <div class="info-section">
+                <h2><i class="fas fa-calendar-alt"></i> Date & Time</h2>
+                <div class="info-item">
+                    <span class="label">Date:</span>
+                    <span class="value">{{ get_event.event_date }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Time:</span>
+                    <span class="value">{{ get_event.event_time }}</span>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h2><i class="fas fa-layer-group"></i> Category & Capacity</h2>
+                <div class="info-item">
+                    <span class="label">Category:</span>
+                    <span class="value">{{ get_event.category }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Capacity:</span>
+                    <span class="value">{{ get_event.capacity }}</span>
+                </div>
+            </div>
+
+            {% if get_venue %}
+            <div class="info-section">
+                <h2><i class="fas fa-map-marked-alt"></i> Venue</h2>
+                <div class="info-item">
+                    <span class="label">Name:</span>
+                    <span class="value">{{ get_venue.name }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Address:</span>
+                    <span class="value">{{ get_venue.address }}, {{ get_venue.city }}{% if get_venue.region %}, {{ get_venue.region }}{% endif %}, {{ get_venue.country }}</span>
+                </div>
+            </div>
+            {% else %}
+            <div class="info-section">
+                <h2><i class="fas fa-exclamation-circle"></i> Venue</h2>
+                <p class="description">No venue is assigned to this event yet.</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <div>
+            <div class="info-section">
+                <h2><i class="fas fa-align-left"></i> Full Description</h2>
+                <p class="description">{{ get_event.long_description }}</p>
+            </div>
+
+            <div class="info-section">
+                <h2><i class="fas fa-user"></i> Hosted By</h2>
+                <div class="info-item">
+                    <span class="label">Organizer:</span>
+                    <span class="value">{{ get_event.actor.username }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+

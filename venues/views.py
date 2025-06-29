@@ -16,7 +16,7 @@ def venues(request):
 
 
 @transaction.atomic
-@login_required(login_url='/users/login/')
+@login_required(login_url='/users/login_user/')
 def create_venue(request):
 	user = request.user
 	if request.POST:

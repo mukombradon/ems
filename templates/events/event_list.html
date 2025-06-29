@@ -4,51 +4,60 @@
 {% block title %}Event List{% endblock %}
 
 {% block extra_styles %}
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'styles/venue_list.css' %}">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/event_list.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 {% endblock %}
 
 {% block content %}
+<section class="event-section">
+  <div class="event-wrapper">
+    <h1 class="event-heading">Upcoming Events</h1>
 
-<!-- Hero Section -->
-<section class="hero">
-    <div class="container">
-       <h1>Discover Amazing Events Near You</h1>
-        <p>Find and attend events that match your interests, from concerts to conferences and everything in between.</p>
-    </div>
-</section>
+    <a href="{% url 'create-event' %}" class="create-event-btn">
+      + Create an Event
+    </a>
 
-<!-- Event Section -->
-<section class="events">
-    <div class="event_container">
-        <a href="{% url 'create-event' %}">Add event</a>
-        {% for event in events %}
-        <div class="event-card">
-            <div>
-                {% with event.images.all as images %}
-                    {% if images %}
-                        {% for image in images %}
-                            <img src="{{ image.image.url }}" alt="Image of {{ event.name }}" class="venue-image">
-                        {% endfor %}
-                    {% else %}
-                        <p><em>No image available for {{ event.name }}</em></p>
-                    {% endif %}
-                {% endwith %}
+    <div class="event-grid">
+      {% for event in events %}
+      <div class="event-card">
+        <div class="event-image-container">
+         {% with event.images.first as image %}
+            {% if image %}
+            <img src="{{ image.image.url }}" alt="Image of {{ event.title }}" class="event-image">
+            {% else %}
+            <img src="https://via.placeholder.com/300x180?text=No+Image" alt="No image" class="event-image">
+            {% endif %}
+         {% endwith %}
 
-            </div>
-            <div>
-                <h3 class="event-title">{{ event.name }}</h3>
-                <p class="event-description">{{ event.description|default:"No description." }}</p>
-                <div class="event-location">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>{{ event.city }}, {{ event.region }}, {{ event.country }}</span>
-                </div>
-                <!-- <a href="{% url 'edit_venue' venue.id %}">Edit</a> -->
-            </div>
+          <span class="event-category">{{ event.category }}</span>
         </div>
-        {% empty %}
-        <p>No events available.</p>
-        {% endfor %}
+
+        <div class="event-content">
+          <span class="event-date">{{ event.event_date|date:"M d, Y" }}</span>
+
+          <h3 class="event-title">{{ event.title }}</h3>
+
+          <p class="event-description">{{ event.short_description|default:"No description." }}</p>
+
+          <div class="event-location">
+            <i class="fas fa-map-marker-alt"></i>
+            <span>{{ event.venue.name }}, {{ event.venue.address }}</span>
+          </div>
+
+          <div class="event-button-wrapper">
+                              <!--details link here-->
+              <a href="{% url 'event_details' event.id %}">View Details</a>
+<!--              currently working-->
+<!--              <a href="{% url 'edit_event' event.id %}">edit Details</a>-->
+
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <p class="no-events">No events available.</p>
+      {% endfor %}
     </div>
+  </div>
 </section>
 {% endblock %}

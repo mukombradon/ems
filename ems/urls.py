@@ -29,7 +29,7 @@ urlpatterns += [
 ]
 
 if not DEBUG:
-    from ecowaste.settings import STATIC_ROOT
+    from ems.settings import STATIC_ROOT
     urlpatterns += [
         re_path(r'^static/(?P<path>.*)$', serve, {'document_root': STATIC_ROOT})
     ]
