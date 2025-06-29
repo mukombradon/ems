@@ -49,6 +49,7 @@ def create_event(request):
         new_event.event_time = event_time
         new_event.venue = venue
         new_event.capacity = capacity
+        new_event.image = request.FILES['image']
         new_event.location = location
         new_event.category = category
         new_event.save()
@@ -125,8 +126,10 @@ def event_details(request, event_id):
     user = request.user
     get_event = get_object_or_404(Event, id=event_id)
     get_venue = get_event.venue if get_event.venue else None
+    event_image = EventImage.objects.filter(event=event_id)
 
     return render(request, 'events/event_details.html', {
         'get_event': get_event,
         'get_venue': get_venue,
+        'event_image': event_image,
     })
