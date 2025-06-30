@@ -140,10 +140,10 @@ LOGIN_URL = '/users/login_user/'
 
 if DEBUG:
     STATICFILES_DIRS = [
-        os.path.join(BASE_DIR, "templates/assets"),
+        os.path.join(BASE_DIR, "static"),
     ]
 else:
-    STATIC_ROOT = os.path.join(os.path.dirname(__file__), "../templates/assets")
+    STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 
 CSRF_TRUSTED_ORIGINS = ['https://event.com', 'http://event.com']
