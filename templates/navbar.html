@@ -1,4 +1,6 @@
 <!-- Navigation -->
+<!-- Navigation -->
+
 <nav class="navbar">
     <div class="navbar_container">
         <a href="#" class="logo">Event<span>MS</span></a>
@@ -8,10 +10,23 @@
             <li><a href="{% url 'categories' %}">Categories</a></li>
             <li><a href="{% url 'venues' %}">Venue</a></li>
             <li><a href="#">Contact</a></li>
+
             {% if request.user.is_authenticated %}
-            <li><a href="{% url 'logout' %}"  style="color: #f8f9fa;" class="btn btn-outline">Logout</a></li>
+            <li class="profile-dropdown">
+                <button class="profile-icon" onclick="toggleDropdown()">
+                    <i style="color:gray;" class="fas fa-user-circle"></i>
+                </button>
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <p><i class="fas fa-envelope"></i> {{ user.email }}</p>
+                    <a href="{% url 'my_events' %}"><i class="fas fa-calendar-check"></i> My Events</a>
+                    <a href="{% url 'my_venues' %}"><i class="fas fa-map-marker-alt"></i> My Venues</a>
+                    <a href="#"> <i class="fas fa-user-edit"></i> Edit Profile</a>
+                    <a href="{% url 'logout' %}"> <i class="fas fa-sign-out-alt"></i> Logout</a>
+                </div>
+            </li>
             {% else %}
-            <li><a href="{% url 'login_user' %}"  style="color: #f8f9fa;" class="btn btn-outline">Login</a></li>
+            <li><a href="{% url 'login_user' %}" style="color:white;" class="btn btn-outline">Login</a></li>
+            <li><a href="{% url 'register_user' %}"  style="color:white;" class="btn btn-outline">Sign up</a></li>
             {% endif %}
         </ul>
     </div>

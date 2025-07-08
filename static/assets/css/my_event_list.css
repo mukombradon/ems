@@ -39,7 +39,6 @@ body {
   font-size: 14px;
   font-weight: 600;
   margin-bottom: 30px;
-
 }
 
 .create-event-btn:hover {
@@ -149,10 +148,8 @@ body {
     padding: 10px;
 }
 .event-button-wrapper a: hover{
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    text-decoration: underline;
 }
-
 .event-details-btn {
   background-color: #3b82f6;
   color: white;

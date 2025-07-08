@@ -1,18 +1,153 @@
 {% extends "base.html" %}
 {% load static %}
 
-
+{% block title %}EventMS - Edit Event{% endblock %}
 
 {% block extra_styles %}
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="{% static 'assets/css/event_list.css' %}">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'assets/css/add_venue.css' %}"> {# Reusing add_venue.css as it likely contains general form styling #}
 {% endblock %}
 
 {% block content %}
-{% block title %}Edit - Event{% endblock %}
 
+<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <h1>Update Your Event</h1>
+            <p>Update and manage your event's information to meet your preferences</p>
+        </div>
+    </div>
+</section>
+<br><br>
+<section class="form-section">
+    <div class="container">
+        <div class="form-container">
+            <div class="form-title">
+                <h2>Event Information</h2>
+                <p>Update the details about your event</p>
+            </div>
+             {% if form_error %}
+            <div class="alert alert-danger" style="color: red; padding: 10px; border: 1px solid red; margin-bottom: 20px;">
+            {{ form_error }}
+            </div>
+            {% endif %}
+            <form method="post" action="{% url 'edit_event' get_event.id %}" enctype="multipart/form-data" id="event-form">
+                {% csrf_token %}
 
+                <div class="form-group">
+                    <h3>Event Details</h3>
+                </div>
 
+                <div class="form-group">
+                    <label for="title">Event Title *</label>
+                    <input type="text" name="title" id="title" value="{{ get_event.title }}" required>
+                </div>
 
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="short_description">Short Description*</label>
+                        <textarea name="short_description" id="short_description" maxlength="110" rows="3" cols="50" required>{{ get_event.short_description }}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="category">Category *</label>
+                        <select name="category" id="category" required>
+                            {% for choice_value, choice_label in get_event.CATEGORY_CHOICES %}
+                            <option value="{{ choice_value }}" {% if get_event.category == choice_value %}selected{% endif %}>{{ choice_label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <label for="long_description">Full Description *</label>
+                    <textarea name="long_description" id="long_description" rows="15" cols="100" required>{{ get_event.long_description }}</textarea>
+                </div>
+
+                  <!-- Date & Time Section -->
+                <div class="form-group">
+                    <h3>Date & Time</h3>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="event_date">Event Date *</label>
+                        <input type="date" name="event_date" id="event_date" value="{{ get_event.event_date}}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="event_time">Event Time *</label>
+                        <input type="time" name="event_time" id="event_time" value="{{ get_event.event_time }}" required>
+                    </div>
+                </div>
+
+                 <!-- Venue & Capacity -->
+                <div class="form-group">
+                    <h3>Venue & Capacity</h3>
+                </div>
+<!--                venue selection-->
+                <div class="form-row">
+                     <div class="form-group">
+                        <label for="venue">Venue</label>
+                        <input list="venue-options" name="venue" id="venue" value="{{get_event.venue.name}}" class="form-control" required placeholder="Start typing venue name...">
+                            <datalist id="venue-options">
+                                {% for venue in venues %}
+                                <option
+                                    data-id="{{ venue.id }}"
+                                    data-address="{{ venue.address }}"
+                                    data-city="{{ venue.city }}"
+                                    data-country="{{ venue.country }}"
+                                    value="{{ venue.name }}">
+                                </option>
+                                {% endfor %}
+                            </datalist>
+                    </div>
+                    <input type="hidden" name="venue_id" id="venue_id">
+
+<!--                    capacity section-->
+                    <div class="form-group">
+                        <label for="capacity">Capacity *</label>
+                        <input type="number" name="capacity" id="capacity" value="{{ get_event.capacity }}" required>
+                    </div>
+                </div>
+
+<!--                location-->
+                <div class="form-group">
+                        <label for="location">Location (e.g., specific room or area) *</label>
+                        <input type="text" name="location" id="location" value="{{ get_event.location }}" required>
+                    </div>
+
+                <div class="form-group">
+                    <h3>Upload Images</h3>
+                    <div class="image-upload" onclick="document.getElementById('event-images').click()">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Click to upload images or drag and drop</p>
+                        <p class="small">Recommended size: 1200x800px</p>
+                    </div>
+
+                    <input type="file" name="image" id="event-images" multiple accept="image/*">
+
+                    <div class="image-preview" id="image-preview">
+                        {% for image in get_event.images.all %}
+                            <div class="existing-image-wrapper">
+                                <img src="{{ image.image.url }}" alt="Event Image" class="existing-image-thumbnail">
+                                {# You might want to add a way to delete existing images here if needed #}
+                            </div>
+                        {% endfor %}
+                        </div>
+                </div>
+
+                <div class="form-group" style="text-align: center; margin-top: 40px;">
+                    <button type="submit" class="btn" style="padding: 12px 40px; font-size: 16px; border: 5px solid #4361ee;">Update Event</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'assets/js/event_image_preview.js' %}"></script>
+<script src="{% static 'assets/js/venue_selection.js' %}"></script>
 {% endblock %}

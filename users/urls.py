@@ -18,8 +18,6 @@ urlpatterns = (
 	path('events/', events_view, name='events'), 
 
 
-	# path('users/', users, name='users'), 
-
 	# path('add_user/', add_user, name='add_user'),
 
 

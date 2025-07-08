@@ -14,15 +14,27 @@
     <div class="venue-header">
         <div class="venue-image-container">
             {% if get_event.image %}
-                <img src="{{ get_event.image.url }}" alt="{{ get_event.title }}" class="main-image">
+            <img src="{{ get_event.image.url }}" alt="{{ get_event.title }}" class="main-image">
             {% else %}
-                <div class="no-image-placeholder">
+            <div class="no-image-placeholder">
                     <i class="fas fa-image"></i>
                     <span>No Image Available</span>
                 </div>
             {% endif %}
         </div>
+        <!--registration button-->
+        {% if user.is_authenticated %}
+        {% if get_event.id in registered_event_ids %}
+        <button class="btn btn-secondary" disabled>Already Registered</button>
+        {% else %}
+        <a href="{% url 'register_event' get_event.id %}" class="btn btn-success">Register</a>
+        {% endif %}
+        {% else %}
+        <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-warning">Login to Register</a>
+        {% endif %}
 
+
+        <!--Event info-->
         <div class="venue-highlights">
             <h1>{{ get_event.title }}</h1>
             <div class="info-section">

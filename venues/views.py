@@ -93,3 +93,8 @@ def venue_details(request, venue_id):
 	user = request.user
 	get_venue = Venue.objects.get(id = venue_id)
 	return render(request, 'venues/venue_details.html', {'get_venue':get_venue}) 
+
+@login_required(login_url='/users/login_user/')
+def my_venues(request):
+	venues = Venue.objects.all()
+	return render(request, 'venues/my_venue.html', {'venues': venues})

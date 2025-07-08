@@ -4,8 +4,11 @@ from django.db import transaction
 from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse, HttpResponseRedirect,HttpResponseForbidden
 from venues.models import Venue
 from django.contrib.auth.models import User, Group, Permission
-
+from django.shortcuts import get_object_or_404, redirect
+from .models import Event, Registration
+from .utils import generate_ticket_pdf
 from .models import *
+from django.db.models import Q
 
 # Create your views here.
 
@@ -103,7 +106,8 @@ def categories(request):
 def edit_event(request, event_id):
     user = request.user
     get_event = Event.objects.get(id=event_id)
-    if request.POST:
+
+    if request.method == "POST":
         get_event.actor = user
         get_event.title = request.POST["title"]
         get_event.short_description = request.POST["short_description"]
@@ -113,13 +117,38 @@ def edit_event(request, event_id):
         get_event.capacity = request.POST["capacity"]
         get_event.location = request.POST["location"]
         get_event.category = request.POST["category"]
-        get_event.get_images = request.FILES.getlist("image")
-        get_event.venue_id = request.POST.get("venue_id")
+
+        # Get venue_id from POST and validate it
+        venue_id = request.POST.get("venue_id")
+        try:
+            venue = Venue.objects.get(id=venue_id)
+            get_event.venue = venue
+        except (Venue.DoesNotExist, ValueError, TypeError):
+            venues = Venue.objects.all()
+            return render(request, 'events/edit_event.html', {
+                'get_event': get_event,
+                'venues': venues,
+                'form_error': 'Invalid venue selected. Please choose from the list.'
+            })
+
+        # Handle image uploads
+        get_images = request.FILES.getlist("image")
+        for image in get_images:
+            new_image = EventImage()
+            new_image.event = get_event
+            new_image.image = image
+            new_image.save()
+
         get_event.save()
         return HttpResponseRedirect('/events/events/')
 
     else:
-        return render(request, 'events/edit_event.html', {'get_event': get_event})
+        venues = Venue.objects.all()
+        return render(request, 'events/edit_event.html', {
+            'get_event': get_event,
+            'venues': venues
+        })
+
 
 @login_required(login_url='/users/login_user/')
 def event_details(request, event_id):
@@ -127,9 +156,67 @@ def event_details(request, event_id):
     get_event = get_object_or_404(Event, id=event_id)
     get_venue = get_event.venue if get_event.venue else None
     event_image = EventImage.objects.filter(event=event_id)
+    registered_event_ids = []
+    if request.user.is_authenticated:
+        registered_event_ids = Registration.objects.filter(user=request.user).values_list('event_id', flat=True)
 
     return render(request, 'events/event_details.html', {
         'get_event': get_event,
         'get_venue': get_venue,
         'event_image': event_image,
+        'registered_event_ids': registered_event_ids
     })
+#Event registration view
+@login_required(login_url='/users/login_user/')
+def register_event(request, event_id):
+    event = get_object_or_404(Event, pk=event_id)
+    registration, created = Registration.objects.get_or_create(user=request.user, event=event)
+    if created:
+        pdf = generate_ticket_pdf(registration)
+        response = HttpResponse(pdf, content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename=ticket_{registration.ticket_id}.pdf'
+        return response
+    return HttpResponse("Already registered", status=400)
+
+
+
+@login_required(login_url='/users/login_user/')
+def my_events(request):
+    events = Event.objects.filter(actor=request.user)
+    return render(request, 'events/my_events.html', {'events': events})
+
+
+@login_required
+def manage_attendees(request, event_id):
+    event = get_object_or_404(Event, id=event_id)
+
+    if request.user != event.actor:
+        return HttpResponse("Unauthorized", status=403)
+
+    query = request.GET.get("q", "")
+    attendees = Registration.objects.filter(event=event)
+
+    if query:
+        attendees = attendees.filter(
+            Q(user__first_name__icontains=query) | Q(user__last_name__icontains=query)
+        )
+
+    remaining_slots = event.capacity - attendees.count() if event.capacity else None
+
+    return render(request, 'events/manage_attendees.html', {
+        'event': event,
+        'attendees': attendees,
+        'remaining_slots': remaining_slots,
+        'query': query,
+    })
+
+
+@login_required
+def remove_attendee(request, registration_id):
+    registration = get_object_or_404(Registration, id=registration_id)
+
+    if request.user != registration.event.actor:
+        return HttpResponse("Unauthorized", status=403)
+
+    registration.delete()
+    return redirect('manage_attendees', event_id=registration.event.id)

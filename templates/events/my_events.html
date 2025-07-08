@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}My Event List{% endblock %}
+
+{% block extra_styles %}
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'assets/css/my_event_list.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+{% endblock %}
+
+{% block content %}
+<section class="event-section">
+  <div class="event-wrapper">
+
+    <a href="{% url 'create-event' %}" class="create-event-btn">
+      + Create an Event
+    </a>
+
+    <div class="event-grid">
+      {% for event in events %}
+      <div class="event-card">
+        <div class="event-image-container">
+         {% with event.images.first as image %}
+            {% if image %}
+            <img src="{{ image.image.url }}" alt="Image of {{ event.title }}" class="event-image">
+            {% else %}
+            <img src="https://via.placeholder.com/300x180?text=No+Image" alt="No image" class="event-image">
+            {% endif %}
+         {% endwith %}
+
+          <span class="event-category">{{ event.category }}</span>
+        </div>
+
+        <div class="event-content">
+          <span class="event-date">{{ event.event_date|date:"M d, Y" }}</span>
+
+          <h3 class="event-title">{{ event.title }}</h3>
+
+          <p class="event-description">{{ event.short_description|default:"No description." }}</p>
+
+          <div class="event-location">
+            <i class="fas fa-map-marker-alt"></i>
+            <span>{{ event.venue.name }}, {{ event.venue.address }}</span>
+          </div>
+
+          <div class="event-button-wrapper">
+                              <!--details link here-->
+              <a href="{% url 'edit_event' event.id %}">Edit</a>
+              <a href="{% url 'event_details' event.id %}">Details</a>
+              <a href="{% url 'manage_attendees' event.id %}">Manage Attendees</a>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <p class="no-events">No events available.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -88,7 +88,7 @@
                 <div class="form-group">
                     <h3>Venue & Capacity</h3>
                 </div>
-
+<!--                venue selection-->
                 <div class="form-row">
                     <div class="form-group">
                         <label for="venue">Venue</label>
@@ -144,71 +144,8 @@
     </div>
 </section>
 
-<script>
-    // Image preview functionality
-    document.getElementById('event-image').addEventListener('change', function(e) {
-        const preview = document.getElementById('image-preview');
-        preview.innerHTML = '';
-        
-        if (this.files && this.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const previewItem = document.createElement('div');
-                previewItem.className = 'image-preview-item';
-
-                const img = document.createElement('img');
-                img.src = e.target.result;
-                img.alt = 'Event Image Preview';
-
-                const removeBtn = document.createElement('div');
-                removeBtn.className = 'remove-image';
-                removeBtn.innerHTML = '&times;';
-                removeBtn.onclick = function() {
-                    previewItem.remove();
-                    document.getElementById('event-image').value = '';
-                };
-
-                previewItem.appendChild(img);
-                previewItem.appendChild(removeBtn);
-                preview.appendChild(previewItem);
-            }
-            reader.readAsDataURL(this.files[0]);
-        }
-    });
-
-    // Venue selection logic
-    const venueInput = document.getElementById('venue');
-    const venueIdInput = document.getElementById('venue_id');
-    const locationInput = document.getElementById('location');
-    const options = document.querySelectorAll('#venue-options option');
-
-    venueInput.addEventListener('input', function () {
-        const inputValue = this.value;
-        let matched = false;
-
-        options.forEach(option => {
-            if (option.value === inputValue) {
-                // Set venue ID
-                venueIdInput.value = option.dataset.id;
-
-                // Format and set location string
-                const address = option.dataset.address || '';
-                const city = option.dataset.city || '';
-                const country = option.dataset.country || '';
-                const locationString = `${address}, ${city}, ${country}`.replace(/(,\s*)+$/, ''); // clean up trailing commas
-
-                locationInput.value = locationString;
-                matched = true;
-            }
-        });
-
-        if (!matched) {
-            venueIdInput.value = '';
-            locationInput.value = '';
-        }
-    });
-</script>
-
+<script src="{% static 'assets/js/event_image_preview.js' %}"></script>
+<script src="{% static 'assets/js/venue_selection.js' %}"></script>
 
 
 

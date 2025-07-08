@@ -39,7 +39,7 @@ def login_user(request):
 
 		if user is not None:
 			login(request, user)
-			return HttpResponseRedirect('/events/event_list/')
+			return HttpResponseRedirect('/events/events/')
 		else:
 			error_msg = "invalid Username or Password"
 			return render(request, 'users/login.html', {'user': user, 'error_msg':error_msg})
@@ -110,7 +110,7 @@ def register_user(request):
 
 		login(request, new_user)
 
-		return HttpResponseRedirect("/events/event_list/")
+		return HttpResponseRedirect("/events/events/")
 
 	else:
 		return render(request, 'users/register_user.html', {})

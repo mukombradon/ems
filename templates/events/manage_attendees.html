@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Manage Attendees - {{ event.title }}{% endblock %}
+
+{% block extra_styles %}
+<link rel="stylesheet" href="{% static 'assets/css/manage_attendees.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="section-title"><span class="highlight-text">{{ event.title }}</span></h2>
+<div class="stats-box">
+  <div class="stat-item"><br>
+    <h3>{{ attendees.count }}</h3>
+    <p>Registered Attendees</p>
+  </div>
+  <div class="stat-item"><br>
+    <h3 style="font-size:1.5rem;">{{ event.event_date }}</h3>
+    <p>Event Date</p>
+  </div>
+
+ {% if event.capacity %}
+  <div class="stat-item"><br>
+    <h3>{{ event.capacity }}</h3>
+    <p>Total Capacity</p>
+  </div>
+  <div class="stat-item"><br>
+    <h3>{{ remaining_slots }}</h3>
+    <p>Remaining Slots</p>
+  </div>
+{% endif %}
+</div>
+
+    <!--    search user-->
+    <form method="get" action="" class="search-form">
+        <input type="text" name="q" value="{{ query }}" placeholder="Search by first or last name..." class="search-input">
+        <button type="submit" class="btn search-btn">Search</button>
+    </form>
+
+
+<!--    Attendee section-->
+
+  {% if attendees %}
+    <div class="table-container">
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Ticket ID</th>
+            <th>Registered At</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for attendee in attendees %}
+            <tr>
+              <td>{{ attendee.user.get_full_name|default:attendee.user.username }}</td>
+              <td>{{ attendee.ticket_id }}</td>
+              <td>{{ attendee.created_at|date:"Y-m-d H:i" }}</td>
+              <td>
+                <form action="{% url 'remove_attendee' attendee.id %}" method="post" class="inline-form">
+                  {% csrf_token %}
+                  <button type="submit" class="btn danger-btn">Revoke</button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p class="empty-message">No attendees have registered for this event yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

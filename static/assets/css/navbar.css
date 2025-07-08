@@ -36,9 +36,6 @@ h1, h2, h3, h4 {
     justify-content: space-between;
 
 }
-
-
-
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -106,3 +103,45 @@ h1, h2, h3, h4 {
     background-color: var(--primary);
     border: 2px solid var(--primary);
 }
+.profile-dropdown {
+    position: relative;
+}
+
+.profile-icon {
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: #fff;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 35px;
+    right: 0;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    z-index: 1000;
+    min-width: 300px;
+    padding: 0.5rem 0;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: #333;
+    text-decoration: none;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f1f1f1;
+}
+.dropdown-menu p {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: gray;
+    text-decoration: none;
+}
+

@@ -167,6 +167,7 @@ h1, h2, h3, h4, h5, h6 {
 .more-details{
     display: flex;
     justify-content: end;
+    gap:5px;
 }
 .more-details a {
     margin-top: 10px;
@@ -179,7 +180,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .venue-card a:hover {
-    color: #2c3e50;
+    color: white;
     text-decoration: underline;
 }
 
