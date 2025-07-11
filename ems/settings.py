@@ -25,9 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-(4)sgp7nh*#fz2k9*)z@m-w%u@7a90_idy9$e8o&y8f&#_h(2-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['Bradon.pythonanywhere.com', 'bradon.pythonanywhere.com']
 
 
 # Application definition
@@ -129,24 +129,26 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 
-#Custom 
+#Custom
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(os.path.dirname(__file__), "../media") #os.path.join(BASE_DIR, 'media'),#
 LOGIN_URL = '/users/login_user/'
 
 
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 
-if DEBUG:
-    STATICFILES_DIRS = [
-        os.path.join(BASE_DIR, "static"),
-    ]
-else:
-    STATIC_ROOT = BASE_DIR / 'staticfiles'
+# if DEBUG:
+#     STATICFILES_DIRS = [
+#         os.path.join(BASE_DIR, "static"),
+#     ]
+# else:
+#     STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 
-CSRF_TRUSTED_ORIGINS = ['https://event.com', 'http://event.com']
+# CSRF_TRUSTED_ORIGINS = ['https://event.com', 'http://event.com']
 
 
 
@@ -155,18 +157,20 @@ CSRF_TRUSTED_ORIGINS = ['https://event.com', 'http://event.com']
 if not os.path.exists(os.path.join(BASE_DIR, 'templates')):
     os.makedirs(os.path.join(BASE_DIR, 'templates'))
 
+if not os.path.exists(os.path.join(BASE_DIR, 'static')):
+    os.makedirs(os.path.join(BASE_DIR, 'static'))
 """create assets folder"""
-if not os.path.exists(os.path.join(BASE_DIR, 'templates/assets')):
-    os.makedirs(os.path.join(BASE_DIR, 'templates/assets'))
+if not os.path.exists(os.path.join(BASE_DIR, 'static/assets')):
+    os.makedirs(os.path.join(BASE_DIR, 'static/assets'))
 
 """create css folder"""
-if not os.path.exists(os.path.join(BASE_DIR, 'templates/assets/css')):
-    os.makedirs(os.path.join(BASE_DIR, 'templates/assets/css'))
+if not os.path.exists(os.path.join(BASE_DIR, 'static/assets/css')):
+    os.makedirs(os.path.join(BASE_DIR, 'static/assets/css'))
 
 """create images folder"""
-if not os.path.exists(os.path.join(BASE_DIR, 'templates/assets/img')):
-    os.makedirs(os.path.join(BASE_DIR, 'templates/assets/img'))
+if not os.path.exists(os.path.join(BASE_DIR, 'static/assets/img')):
+    os.makedirs(os.path.join(BASE_DIR, 'static/assets/img'))
 
 """create js folder"""
-if not os.path.exists(os.path.join(BASE_DIR, 'templates/assets/js')):
-    os.makedirs(os.path.join(BASE_DIR, 'templates/assets/js'))
+if not os.path.exists(os.path.join(BASE_DIR, 'static/assets/js')):
+    os.makedirs(os.path.join(BASE_DIR, 'static/assets/js'))

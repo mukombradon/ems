@@ -22,6 +22,7 @@
                 </div>
             {% endif %}
         </div>
+        <br>
         <!--registration button-->
         {% if user.is_authenticated %}
         {% if get_event.id in registered_event_ids %}
@@ -33,7 +34,7 @@
         <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-warning">Login to Register</a>
         {% endif %}
 
-
+        <br><br>
         <!--Event info-->
         <div class="venue-highlights">
             <h1>{{ get_event.title }}</h1>
